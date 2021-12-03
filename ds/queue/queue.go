@@ -1,4 +1,4 @@
-package utils
+package queue
 
 import "fmt"
 
@@ -16,6 +16,7 @@ type linkedNode struct {
 	data interface{}
 	left *linkedNode
 }
+
 //队列的解构.
 type Queue struct {
 	//最右边的的元素相当于栈顶.
@@ -27,19 +28,21 @@ type Queue struct {
 }
 
 //创建一个长度为0的队列.
-func NewQueue()*Queue  {
-	return &Queue{right: nil,left: nil, size: 0}
+func NewQueue() *Queue {
+	return &Queue{right: nil, left: nil, size: 0}
 }
+
 //返回true如果队列长度为0
-func (this *Queue) IsEmpty()bool  {
+func (this *Queue) IsEmpty() bool {
 	return this == nil || this.size <= 0
 }
+
 //Push 队列链表添加一个元素
 //新添加的元素在最左边，所以要维护一个最左边元素的指针.
-func (this *Queue) Push(in interface{})error  {
+func (this *Queue) Push(in interface{}) error {
 	//不允许添加空的内容.
 	if in == nil {
-		return  fmt.Errorf("error:%s", "Push不能为空")
+		return fmt.Errorf("error:%s", "Push不能为空")
 	}
 	//插入的节点初始化
 	node := &linkedNode{data: in}
@@ -47,7 +50,7 @@ func (this *Queue) Push(in interface{})error  {
 	if this.IsEmpty() {
 		this.left = node
 		this.right = node
-	}else {
+	} else {
 		//如果队列不为空
 		//将插入节点插入到队列的最左边
 		//左节点左指针指向插入节点
@@ -56,9 +59,10 @@ func (this *Queue) Push(in interface{})error  {
 		this.left = node
 	}
 	//长度 +1
-	this.size ++
+	this.size++
 	return nil
 }
+
 //Pop 对列链表中弹出一个元素
 //最右节点开始弹出来.
 func (this *Queue) Pop() interface{} {
@@ -74,16 +78,18 @@ func (this *Queue) Pop() interface{} {
 	//有后面一个元素继承right的位置
 	this.right = node
 	//长度 -1
-	this.size --
+	this.size--
 	//返回的是元素，而不是，链表节点.
 	return right.data
 }
+
 //Size()返回队列链表中的元素的数量.
 func (this *Queue) Size() int {
 	return this.size
 }
+
 //peek()
-func (this *Queue) Peek() (interface{})  {
+func (this *Queue) Peek() interface{} {
 	//队列中没有元素的时候.
 	if this.size <= 0 {
 		fmt.Printf("error:%s", "队列中的元素为空")
