@@ -101,9 +101,17 @@ func (this *Stack) Peek() interface{} {
 }
 
 //返回this.topIndex.
-func (this *Stack) size() int {
+func (this *Stack) Size() int {
 	if this == nil {
 		return -1
 	}
 	return this.topIndex + 1
+}
+
+//返回 data[:this.topIndex+1]) 数据拷贝
+//  先进的在左边, 后进来的在右边
+func (this *Stack) GetData() (data []interface{}) {
+	data = make([]interface{}, this.topIndex+1)
+	copy(data, this.data[:this.topIndex+1])
+	return data
 }

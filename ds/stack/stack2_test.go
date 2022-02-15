@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+func TestGetData(t *testing.T) {
+	s := NewStack()
+	s.Push(1)
+	s.Push(2)
+	s.Push(3)
+	i := s.GetData()
+	fmt.Printf("i: %v\n", i)
+}
+
 //结论是 cap 是动态扩容的.
 //初始化一个动态数据的 len 和  cap 都是 0
 //append 1 之后len and cap 都是1

@@ -40,3 +40,30 @@ func TestSet(t *testing.T) {
 	s5s := s5.All()
 	fmt.Printf("差集=%#v\n", s5s)
 }
+
+func TestWithSync(t *testing.T) {
+	s1 := New(WithSync())
+	go func() {
+		for i := 0; i < 100000; i++ {
+			s1.Add(1)
+		}
+	}()
+	for i := 0; i < 100000; i++ {
+		s1.Exists(1)
+	}
+	fmt.Printf("%s\n", "OK")
+}
+
+//会发生panic=
+func TestWithoutSync(t *testing.T) {
+	s1 := New()
+	go func() {
+		for i := 0; i < 100000; i++ {
+			s1.Add(1)
+		}
+	}()
+	for i := 0; i < 100000; i++ {
+		s1.Exists(1)
+	}
+	fmt.Printf("%s\n", "OK")
+}
