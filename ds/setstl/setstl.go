@@ -1,43 +1,20 @@
-package set
+package setstl
 
 import (
 	"github.com/dengjiawen8955/gostl/ds/options"
 	"github.com/dengjiawen8955/gostl/util/gosync"
 )
 
-type SetIn interface {
-	//添加
-	Add(element interface{})
-	//批量添加
-	AddALL(elements []interface{})
-	//删除
-	Del(element interface{})
-	//查看集合中是否含有元素
-	Exists(element interface{}) (exists bool)
-	//集合是否为空
-	IsEmpty() (isEmpty bool)
-	//返回集合长度
-	Len() (length int)
-	//返回集合所有元素,乱序
-	All() (elements []interface{})
-	//Inter 交集
-	Inter(sets ...*Set) (resultSet *Set)
-	//Union 并集
-	Union(sets ...*Set) (resultSet *Set)
-	//Diff 差集
-	Diff(sets ...*Set) (resultSet *Set)
-}
-
-type Set struct {
+type Set[T comparable] struct {
 	//集合的底层用 map 实现
-	setMap map[interface{}]struct{}
+	setMap map[T]struct{}
 	//可选: 锁
 	locker gosync.Locker
 }
 
 //返回一个空的 set 对象
 //opts 支持线程安全
-func New(opts ...options.Option) (set *Set) {
+func New[T comparable](opts ...options.Option) (set *Set[T]) {
 	option := &options.Options{
 		// 默认使用假锁,线程不安全
 		Locker: gosync.FakeLocker{},
@@ -46,28 +23,28 @@ func New(opts ...options.Option) (set *Set) {
 	for _, opt := range opts {
 		opt(option)
 	}
-	return &Set{
-		setMap: make(map[interface{}]struct{}),
+	return &Set[T]{
+		setMap: make(map[T]struct{}),
 		locker: option.Locker,
 	}
 }
 
 //添加
-func (s *Set) Add(element interface{}) {
+func (s *Set[T]) Add(element T) {
 	s.locker.Lock()
 	defer s.locker.Unlock()
 	s.setMap[element] = struct{}{}
 }
 
 //删除
-func (s *Set) Del(element interface{}) {
+func (s *Set[T]) Del(element T) {
 	s.locker.Lock()
 	defer s.locker.Unlock()
 	delete(s.setMap, element)
 }
 
 //查看集合中是否含有元素
-func (s *Set) Exists(element interface{}) (has bool) {
+func (s *Set[T]) Exists(element T) (has bool) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
 	_, has = s.setMap[element]
@@ -75,24 +52,24 @@ func (s *Set) Exists(element interface{}) (has bool) {
 }
 
 //集合是否为空
-func (s *Set) IsEmpty() (isEmpty bool) {
+func (s *Set[T]) IsEmpty() (isEmpty bool) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
 	return len(s.setMap) == 0
 }
 
 //返回集合长度
-func (s *Set) Len() (length int) {
+func (s *Set[T]) Len() (length int) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
 	return len(s.setMap)
 }
 
 //返回集合所有元素,乱序
-func (s *Set) All() (elements []interface{}) {
+func (s *Set[T]) All() (elements []T) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
-	elements = make([]interface{}, 0)
+	elements = make([]T, 0)
 	for element, _ := range s.setMap {
 		elements = append(elements, element)
 	}
@@ -100,10 +77,10 @@ func (s *Set) All() (elements []interface{}) {
 }
 
 //Inter 交集(默认返回线程不安全的集合)
-func (s *Set) Inter(sets ...*Set) (resultSet *Set) {
+func (s *Set[T]) Inter(sets ...*Set[T]) (resultSet *Set[T]) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
-	resultSet = New()
+	resultSet = New[T]()
 	for e1, _ := range s.setMap {
 		isInter := true
 		for _, set := range sets {
@@ -121,10 +98,10 @@ func (s *Set) Inter(sets ...*Set) (resultSet *Set) {
 
 //Union 并集(默认返回线程不安全的集合)
 //todo 使用迭代器
-func (s *Set) Union(sets ...*Set) (resultSet *Set) {
+func (s *Set[T]) Union(sets ...*Set[T]) (resultSet *Set[T]) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
-	resultSet = New()
+	resultSet = New[T]()
 	for e1 := range s.setMap {
 		resultSet.Add(e1)
 	}
@@ -137,10 +114,10 @@ func (s *Set) Union(sets ...*Set) (resultSet *Set) {
 }
 
 //Diff 差集(默认返回线程不安全的集合)
-func (s *Set) Diff(sets ...*Set) (resultSet *Set) {
+func (s *Set[T]) Diff(sets ...*Set[T]) (resultSet *Set[T]) {
 	s.locker.RLock()
 	defer s.locker.RUnlock()
-	resultSet = New()
+	resultSet = New[T]()
 	for e1 := range s.setMap {
 		isDiff := true
 		for _, set := range sets {

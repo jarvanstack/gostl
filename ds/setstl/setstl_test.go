@@ -1,4 +1,4 @@
-package set
+package setstl
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 // 并集=[]interface {}{1, 2, 3}
 // 差集=[]interface {}{1}
 func TestSet(t *testing.T) {
-	s1 := New()
+	s1 := New[int]()
 	s1.Add(1)
 	s1.Add(2)
 	fmt.Printf("s1.Exists(1): %v\n", s1.Exists(1))
@@ -26,7 +26,7 @@ func TestSet(t *testing.T) {
 	is := s1.All()
 	fmt.Printf("is: %v\n", is)
 	s1.Add(1)
-	s2 := New()
+	s2 := New[int]()
 	s2.Add(2)
 	s2.Add(3)
 	//交集
@@ -44,7 +44,7 @@ func TestSet(t *testing.T) {
 }
 
 func TestWithSync(t *testing.T) {
-	s1 := New(options.WithSync())
+	s1 := New[int](options.WithSync())
 	go func() {
 		for i := 0; i < 100000; i++ {
 			s1.Add(1)
@@ -58,7 +58,7 @@ func TestWithSync(t *testing.T) {
 
 //会发生panic=
 func TestWithoutSync(t *testing.T) {
-	s1 := New()
+	s1 := New[int]()
 	go func() {
 		for i := 0; i < 100000; i++ {
 			s1.Add(1)

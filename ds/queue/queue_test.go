@@ -1,9 +1,21 @@
 package queue
 
 import (
+	"container/list"
 	"fmt"
 	"testing"
 )
+
+func TestFunctionList(t *testing.T) {
+	l := list.New()
+	l.PushBack("n1")
+	l.PushBack("n2")
+	node := l.Front()
+	for node != nil {
+		fmt.Printf("node.Value: %v\n", node.Value)
+		node = node.Next()
+	}
+}
 
 //测试push
 //搞错了，新来的元素因该在左边，所以我们必须维护一个left节点的指针.用来push

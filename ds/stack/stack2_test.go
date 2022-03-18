@@ -58,6 +58,7 @@ func TestStackChangeLengthTest(t *testing.T) {
 //这玩意比java的stack慢，难受.
 func TestCopy(t *testing.T) {
 	var data []int
+	data = make([]int, 100)
 	for i := 0; i < 100; i++ {
 		data[i] = i
 	}
