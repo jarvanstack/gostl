@@ -1,8 +1,8 @@
 package setstl
 
 import (
-	"github.com/dengjiawen8955/gostl/ds/options"
-	"github.com/dengjiawen8955/gostl/util/gosync"
+	"github.com/jarvanstack/gostl/ds/options"
+	"github.com/jarvanstack/gostl/util/gosync"
 )
 
 type Set[T comparable] struct {

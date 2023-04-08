@@ -3,7 +3,7 @@ package options
 import (
 	"sync"
 
-	"github.com/dengjiawen8955/gostl/util/gosync"
+	"github.com/jarvanstack/gostl/util/gosync"
 )
 
 // Options holds the Set's options

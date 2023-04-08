@@ -1,8 +1,8 @@
 package set
 
 import (
-	"github.com/dengjiawen8955/gostl/ds/options"
-	"github.com/dengjiawen8955/gostl/util/gosync"
+	"github.com/jarvanstack/gostl/ds/options"
+	"github.com/jarvanstack/gostl/util/gosync"
 )
 
 type SetIn interface {

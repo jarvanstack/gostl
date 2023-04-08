@@ -1,3 +1,3 @@
-module github.com/dengjiawen8955/gostl
+module github.com/jarvanstack/gostl
 
 go 1.18
